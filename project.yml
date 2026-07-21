@@ -1,0 +1,35 @@
+# XcodeGen 备份方案：如果手写的 project.pbxproj 打不开，
+# 在 Mac 上 `brew install xcodegen` 后，在本目录执行 `xcodegen generate` 即可重新生成工程。
+# 两者产物等价，二选一即可。
+
+name: LingYiLunTan
+options:
+  bundleIdPrefix: top.lingyiluntan
+  deploymentTarget:
+    iOS: "14.0"
+  developmentLanguage: zh-Hans
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.7.6"
+    CURRENT_PROJECT_VERSION: "1"
+    TARGETED_DEVICE_FAMILY: "1,2"
+    CODE_SIGN_STYLE: Automatic
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  LingYiLunTan:
+    type: application
+    platform: iOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: LingYiLunTan
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: top.lingyiluntan.ios
+        PRODUCT_NAME: LingYiLunTan
+        INFOPLIST_FILE: LingYiLunTan/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        INFOPLIST_KEY_UIRequiresFullScreen: YES
