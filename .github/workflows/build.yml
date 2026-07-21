@@ -1,0 +1,44 @@
+name: Build IPA
+
+# 推到 GitHub 后自动编译出 IPA，下载 artifact 即可
+# 不需要 Mac，白嫖 GitHub 的 macOS runner
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:  # 也能手动触发
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 选 Xcode 版本
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: 编译 archive（不签名）
+        run: |
+          xcodebuild archive \
+            -project LingYiLunTan.xcodeproj \
+            -scheme LingYiLunTan \
+            -configuration Release \
+            -archivePath build/LingYiLunTan.xcarchive \
+            -destination "generic/platform=iOS" \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            AD_HOC_CODE_SIGNING_ALLOWED=NO
+
+      - name: 打包 IPA
+        run: |
+          mkdir -p build/Payload
+          cp -R build/LingYiLunTan.xcarchive/Products/Applications/LingYiLunTan.app build/Payload/
+          cd build
+          zip -qry LingYiLunTan.ipa Payload
+
+      - name: 上传 IPA 产物
+        uses: actions/upload-artifact@v4
+        with:
+          name: LingYiLunTan-ipa
+          path: build/LingYiLunTan.ipa
+          retention-days: 30
